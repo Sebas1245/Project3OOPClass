@@ -11,6 +11,7 @@ class Fecha {
         int dd, mm, aa;
         // method returns month of the objetc in text
         string nombreMes();
+        // method calculates if it is leap year
         bool bisiesto(int );
     public:
         // constructors
@@ -20,10 +21,6 @@ class Fecha {
         int getDd();
         int getMm();
         int getAa();
-        // modification methods
-        void setDd(int);
-        void setMm(int);
-        void setAa(int);
         // operator overload
         Fecha operator+(int diasAg);
         bool operator<(Fecha f2);
@@ -58,16 +55,6 @@ int Fecha::getMm(){
 }
 int Fecha::getAa(){
     return aa;
-}
-// setters
-void Fecha::setDd(int d){
-    dd = d;
-}
-void Fecha::setMm(int m){
-    mm = m;
-}
-void Fecha::setAa(int a){
-    aa = a;
 }
 // operator overloads
 Fecha Fecha::operator+(int diasAgregar){
