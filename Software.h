@@ -13,7 +13,7 @@ class Software: public Material {
     public:
         // constructors
         Software();
-        Software(int, string);
+        Software(int, string, int, string);
         // setters
         void setVersion(int);
         void setSO(string);
@@ -26,7 +26,7 @@ class Software: public Material {
 };
 
 // constructor implementation
-Software::Software(int v, string so) {
+Software::Software(int idM, string titulo,int v, string so):Material(idM,titulo) {
     Version = v;
     SO = so;
 }

@@ -12,7 +12,7 @@ class Libro : public Material {
         string autor;
     public:
         // constructors
-        Libro(int, string);
+        Libro(int, string, int, string);
         Libro();
         // setters
         void setNumPag(int);
@@ -26,7 +26,7 @@ class Libro : public Material {
 };
 
 // constructors
-Libro::Libro(int num, string a) {
+Libro::Libro(int idM, string titulo, int num, string a):Material(idM,titulo) {
     numPag = num;
     autor = a;
 }

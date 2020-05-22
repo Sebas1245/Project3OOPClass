@@ -12,7 +12,7 @@ class Disco : public Material {
         string Genero;
     public:
         // constructors
-        Disco(int, string);
+        Disco(int, string, int, string);
         Disco();
         // setters
         void setDuracion(int);
@@ -26,7 +26,7 @@ class Disco : public Material {
 };
 
 // constructors
-Disco::Disco(int num, string g) {
+Disco::Disco(int idM, string titulo, int num, string g):Material(idM,titulo) {
     duracion = num;
     Genero = g;
 }
