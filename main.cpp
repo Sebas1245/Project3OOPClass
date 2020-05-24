@@ -100,7 +100,7 @@ int main(){
     int dia, mes, anio, idC;
     // counter
     int j = 0;
-    while(archReservaciones >> dia >> mes >> anio >> idC >> idM) {
+    while(archReservaciones >> dia >> mes >> anio >> idM >> idC) {
         arrReservas[j].setIdCliente(idC);
         arrReservas[j].setIdMaterial(idM);
         Fecha fechaReserva(dia,mes,anio);
@@ -109,11 +109,10 @@ int main(){
     }
     archReservaciones.close();
     // end of loading Reservations info from input file
-
-    // run menu function to get the input option
     char respMenu;
-    respMenu = menu();
     do {
+        // run menu function to get the input option
+        respMenu = menu();
         switch (respMenu) {
             case 'A':
                 for(int i = 0; i < 30; i++) {
@@ -123,30 +122,35 @@ int main(){
                 }
                 break;
             case 'B':
-                for(int i = 0; i < 30; i++) {
+                for(int i = 0; i < 60; i++) {
                     if(arrReservas[i].getIdCliente() != -1 ) {
                         Fecha fechaInicio = arrReservas[i].getFecha(), fechaFin;
-                        string tituloMaterial;
+                        int idCliente = arrReservas[i].getIdCliente();
+                        string tituloMaterial = "N/D";
                         // try to get the end date of Reserva and the name of the material
                         try{
                             for(int j = 0; j < 60; j++){
-                                if(arrReservas[i].getIdMaterial() == arrMaterialP[j] -> getIdMaterial()) {
+                            if(arrReservas[i].getIdMaterial() == arrMaterialP[j] -> getIdMaterial()) {
                                     fechaFin = arrReservas[i].calculaFechaFinReserva(arrMaterialP[j] -> cantidadDiasPrestamo());
                                     tituloMaterial = arrMaterialP[j] -> getTitulo();
-                                }
-                                else {
-                                    throw runtime_error("Material no encontrado para la reserva del cliente" + arrReservas[i].getIdCliente());
+                                    break;
                                 }
                             }
+                            if (tituloMaterial == "N/D")
+                            {
+                                throw runtime_error("Material no encontrado para la reservacion del cliente " + idCliente);
+                            }
+                            
                         }
                         catch(const runtime_error& e) {
-                            std::cerr << e.what() << '\n';
+                            cout << e.what() << '\n';
                         }
-                        cout << "Reserva " << i << ") ";
+                        
+                        cout << "Reserva " << i + 1<< ") ";
                         cout << "Inicio de reserva: " << fechaInicio;
-                        cout << "Fin de reserva: " << fechaFin;
-                        cout << "Titulo: " << tituloMaterial;
-                        cout << "ID Cliente: " << arrReservas[i].getIdCliente() << endl;
+                        cout << " Fin de reserva: " << fechaFin;
+                        cout << " Titulo: " << tituloMaterial;
+                        cout << " ID Cliente: " << idCliente << endl;
                     }
                 }
                 break;
@@ -157,7 +161,7 @@ int main(){
             case 'E':
                 break;        
             default:
-                cout << "Ha elegido terminar la sesión " << endl;
+                cout << "Ha elegido terminar la sesion " << endl;
                 break;
         }
     } while (respMenu != 'F');
