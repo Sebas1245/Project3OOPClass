@@ -220,7 +220,7 @@ ostream &operator<<(ostream &out, Fecha &F) {
     return out;
 }
 istream &operator>>(istream &input,Fecha &F) {
-    cout << "Ingrese la fecha en el formato dd/mm/aa : ";
+    cout << "Ingrese la fecha en el formato dd/mm/aa : " << endl;
     input >> F.dd;
     input >> F.mm;
     input >> F.aa;
