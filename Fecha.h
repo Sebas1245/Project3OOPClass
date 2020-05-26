@@ -32,6 +32,8 @@ class Fecha {
         friend istream &operator>>(istream &input, Fecha &F);
         // other method(s)
         void setFecha(int, int, int);
+        // validates that the objects date is correct 
+        void validarFecha();
 };
 
 // constructors
@@ -218,11 +220,9 @@ ostream &operator<<(ostream &out, Fecha &F) {
     return out;
 }
 istream &operator>>(istream &input,Fecha &F) {
-    cout << "Ingrese el dia: ";
+    cout << "Ingrese la fecha en el formato dd/mm/aa : ";
     input >> F.dd;
-    cout << "Ingrese el mes: ";
     input >> F.mm;
-    cout << "Ingrese el anio: ";
     input >> F.aa;
     return input;
 }
@@ -254,7 +254,7 @@ string Fecha::nombreMes(){
         case 12:
             return "Dec";
         default:
-            return "N/D";
+            return "Mes incorrecto";
     }
 }
 void Fecha::setFecha(int d, int m, int a){
@@ -268,5 +268,35 @@ bool Fecha::bisiesto(int a){
     }
     else {
         return false;
+    }
+}
+
+void Fecha::validarFecha(){
+    // revisamos si el año de la Fecha es bisiesto
+    bool esBisiesto = bisiesto(aa);
+    // revisamos primero el mes de febrero
+    if (mm == 2 && dd > 28 && !esBisiesto) {
+        throw runtime_error("La fecha es invalida debido al dia");
+    }
+    else if(mm == 2 && dd > 29 && esBisiesto) {
+        throw runtime_error("La fecha es invalida debido al dia");
+    }
+    // para los meses con 31 dias
+    else if((mm == 1 || mm == 3 || mm == 5 || mm == 7 || mm == 8 || mm == 10 || mm == 12) && dd > 31){
+        throw runtime_error("La fecha es invalida debido al dia");
+    }
+    // para los meses con 30 dias
+    else if((mm == 4 || mm == 6 || mm == 9 || mm == 11) && dd > 30){
+        throw runtime_error("La fecha es invalida debido al dia");
+    }
+    // revisar si es un mes invalido
+    else if(nombreMes() == "Mes incorrecto") {
+        throw runtime_error("La fecha es invalida debido al mes");
+    }
+    else if(dd < 1) {
+        throw runtime_error("El dia no puede ser 0 o negativo");
+    }
+    else if(aa < 1 ) {
+        throw runtime_error("El anio es invalido ");
     }
 }
