@@ -158,24 +158,28 @@ bool Fecha::operator>(Fecha f2) {
     }
 }
 bool Fecha::operator<=(Fecha f2){
-    if ((aa == f2.aa) && (mm == f2.mm) && (dd == f2.dd)){
+    if (aa < f2.aa){
         return true;
     }
+    else if (aa > f2.aa){
+        return false;
+    }
     else {
-        if(aa < f2.aa){
+        if (mm < f2.mm){
             return true;
         }
+        else if(mm > f2.mm) {
+            return false;
+        }
         else {
-            if(mm < f2.mm){
+            if(dd < f2.dd) {
+                return true;
+            }
+            else if(dd == f2.dd) {
                 return true;
             }
             else {
-                if(dd < f2.dd) {
-                    return true;
-                }
-                else {
-                    return false;
-                }
+                return false;
             }
         }
     }
