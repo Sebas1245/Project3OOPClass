@@ -23,7 +23,7 @@ char menu(){
         cout << "B. Consultar la lista de reservaciones " << endl;
         cout << "C. Consultar las reservaciones de un material dado " << endl;
         cout << "D. Consultar las reservaciones de una fecha dada " << endl;
-        cout << "E. Hacer una reservación " << endl;
+        cout << "E. Hacer una reservacion " << endl;
         cout << "F. Terminar " << endl;
         cout << "----------------------------------------------------------------------------------------------" << endl;
         cin >> resp;
@@ -287,7 +287,6 @@ int main(){
                         fechaFin = arrReservas[i].calculaFechaFinReserva(diasDePrestamoMaterial);
                         // check if the material is reserved on the same date
                         if (fechaIntroducida >= fechaInicio && fechaIntroducida <= fechaFin) {
-                            cout << "first if at index " << i << endl;
                             cout << "El material " << tituloMaterial << " esta reservado para la fecha deseada." << endl;
                             issueFound = true;
                             break;
@@ -295,7 +294,6 @@ int main(){
                         // the reservation plus the amount of days the material will be lent be in the range of another reservation
                         // date of a reservation as it must be returned prior to the date of an existing reservation 
                         else if((fechaIntroducida + diasDePrestamoMaterial) >= fechaInicio && (fechaIntroducida + diasDePrestamoMaterial) <= fechaFin) {
-                            cout << "second if at index " << i << endl;
                             cout << "El material " << tituloMaterial << " esta reservado para la fecha deseada." << endl;
                             issueFound = true;
                             break;
