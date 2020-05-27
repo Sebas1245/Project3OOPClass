@@ -101,13 +101,13 @@ int main(){
     archReservaciones.open("Reservaciones.txt");
     int dia, mes, anio, idC;
     // counter
-    int j = 0;
+    int reservaciones = 0;
     while(archReservaciones >> dia >> mes >> anio >> idM >> idC) {
-        arrReservas[j].setIdCliente(idC);
-        arrReservas[j].setIdMaterial(idM);
+        arrReservas[reservaciones].setIdCliente(idC);
+        arrReservas[reservaciones].setIdMaterial(idM);
         Fecha fechaReserva(dia,mes,anio);
-        arrReservas[j].setFecha(fechaReserva);
-        j++;
+        arrReservas[reservaciones].setFecha(fechaReserva);
+        ++reservaciones;
     }
     archReservaciones.close();
     // end of loading Reservations info from input file
@@ -131,36 +131,32 @@ int main(){
                 break;
             }
             case 'B': {
-                for(int i = 0; i < 60; i++) {
-                    if(arrReservas[i].getIdCliente() != -1 ) {
-                        fechaInicio = arrReservas[i].getFecha(); 
-                        idCliente = arrReservas[i].getIdCliente();
-                        tituloMaterial = "N/D";
-                        // try to get the end date of Reserva and the name of the material
-                        try{
-                            for(int j = 0; j < objetosMaterial; j++){
-                                if(arrReservas[i].getIdMaterial() == arrMaterialP[j] -> getIdMaterial()) {
-                                    fechaFin = arrReservas[i].calculaFechaFinReserva(arrMaterialP[j] -> cantidadDiasPrestamo());
-                                    tituloMaterial = arrMaterialP[j] -> getTitulo();
-                                    break;
-                                }
+                for(int i = 0; i < reservaciones; i++) {
+                    fechaInicio = arrReservas[i].getFecha(); 
+                    idCliente = arrReservas[i].getIdCliente();
+                    tituloMaterial = "N/D";
+                    // try to get the end date of Reserva and the name of the material
+                    try{
+                        for(int j = 0; j < objetosMaterial; j++){
+                            if(arrReservas[i].getIdMaterial() == arrMaterialP[j] -> getIdMaterial()) {
+                                fechaFin = arrReservas[i].calculaFechaFinReserva(arrMaterialP[j] -> cantidadDiasPrestamo());
+                                tituloMaterial = arrMaterialP[j] -> getTitulo();
+                                break;
                             }
-                            if (tituloMaterial == "N/D")
-                            {
-                                throw runtime_error("Material no encontrado para la reservacion del cliente " + idCliente);
-                            }
-                            
                         }
-                        catch(const runtime_error& e) {
-                            cout << e.what() << '\n';
+                        if (tituloMaterial == "N/D") {
+                            throw runtime_error("Material no encontrado para la reservacion del cliente " + idCliente);
                         }
                         
-                        cout << "Reserva " << i + 1 << ") ";
-                        cout << "Inicio de reserva: " << fechaInicio;
-                        cout << " Fin de reserva: " << fechaFin;
-                        cout << " Titulo: " << tituloMaterial;
-                        cout << " ID Cliente: " << idCliente << endl;
                     }
+                    catch(const runtime_error& e) {
+                        cout << e.what() << '\n';
+                    }
+                    cout << "Reserva " << i + 1 << ") ";
+                    cout << "Inicio de reserva: " << fechaInicio;
+                    cout << " Fin de reserva: " << fechaFin;
+                    cout << " Titulo: " << tituloMaterial;
+                    cout << " ID Cliente: " << idCliente << endl;    
                 }
                 break;
             }    
@@ -190,7 +186,7 @@ int main(){
                 // display name of material 
                 cout << "Material: " << tituloMaterial << endl;
                 // get reservations with that specific material ID and show info if there is a match
-                for (int i = 0; i < 60; i++) {
+                for (int i = 0; i < reservaciones; i++) {
                     if(arrReservas[i].getIdMaterial() == inputIDMat) {
                         noOfReservation++; 
                         fechaInicio = arrReservas[i].getFecha();
@@ -209,18 +205,19 @@ int main(){
                 break;
             }
             case 'D':{
+                // try to input the date 
                 try {
                     cin >> fechaIntroducida;
                     fechaIntroducida.validarFecha();
+                    cout << "Reservaciones para " << fechaIntroducida << endl;
                 }
                 catch(runtime_error& e) {
                     cout << e.what() << endl;
                 }
-                cout << "Reservaciones para " << fechaIntroducida << endl;
                 // revisamos para cada Material si la fecha introducida está dentro del rango de una reservación existente
                 for(int i = 0; i < objetosMaterial; i++) {
                     // para cada Reservacion reviso el rango de fechas
-                    for(int j = 0; j < 60; j++) {
+                    for(int j = 0; j < reservaciones; j++) {
                         if (arrReservas[j].getIdMaterial() == arrMaterialP[i] -> getIdMaterial()){
                             fechaInicio = arrReservas[j].getFecha();
                             fechaFin = arrReservas[j].calculaFechaFinReserva(arrMaterialP[i] -> cantidadDiasPrestamo());
@@ -235,14 +232,105 @@ int main(){
                         }
                     }
                 }
+                // noOfReservation only increases if a reservation within the range of date is found
+                // if it is at 0 it means there were no reservations in that range of date
+                if (noOfReservation == 0) {
+                    cout << "No se encontraron reservaciones para esta fecha " << endl;
+                }
                 break;
             }  
             case 'E': {
+                bool issueFound;
+                // ask and validate material ID
+                do {
+                    if(intentos > 0) {
+                        cout << "El ID introducido es invalido, intente de nuevo " << endl;
+                    }
+                    else {
+                        cout << "Introduzca el ID del material " << endl;
+                    }
+                    cin >> inputIDMat;
+                    for (int i = 0; i < objetosMaterial; i++){
+                        if(arrMaterialP[i] -> getIdMaterial() != inputIDMat) {
+                            idValido = false;
+                        }
+                        else {
+                            tituloMaterial = arrMaterialP[i] -> getTitulo();
+                            indexFoundID = i;
+                            idValido = true;
+                            break;
+                        }
+                    }
+                    intentos++;
+                }while (!idValido);
+                // try to input the date and input client ID
+                try {
+                    cin >> fechaIntroducida;
+                    fechaIntroducida.validarFecha();
+                    // ask for client ID
+                    cout << "Introduzca el ID del cliente " << endl;
+                    cin >> idCliente;
+                    if (idCliente < 0) {
+                        throw runtime_error("El ID del cliente no puede ser un número negativo");
+                    }
+                    
+                }
+                catch(runtime_error& e) {
+                    cout << e.what() << endl;
+                    break;
+                }
+                int diasDePrestamoMaterial = arrMaterialP[indexFoundID] -> cantidadDiasPrestamo();
+                for(int i = 0; i < reservaciones; i++) {
+                    // if the reservation we are at has the same material we have to check everything
+                    if(arrReservas[i].getIdMaterial() == arrMaterialP[indexFoundID] -> getIdMaterial()){
+                        fechaInicio = arrReservas[i].getFecha();
+                        fechaFin = arrReservas[i].calculaFechaFinReserva(diasDePrestamoMaterial);
+                        // check if the material is reserved on the same date
+                        if (fechaIntroducida >= fechaInicio && fechaIntroducida <= fechaFin) {
+                            cout << "first if at index " << i << endl;
+                            cout << "El material " << tituloMaterial << " esta reservado para la fecha deseada." << endl;
+                            issueFound = true;
+                            break;
+                        }
+                        // the reservation plus the amount of days the material will be lent be in the range of another reservation
+                        // date of a reservation as it must be returned prior to the date of an existing reservation 
+                        else if((fechaIntroducida + diasDePrestamoMaterial) >= fechaInicio && (fechaIntroducida + diasDePrestamoMaterial) <= fechaFin) {
+                            cout << "second if at index " << i << endl;
+                            cout << "El material " << tituloMaterial << " esta reservado para la fecha deseada." << endl;
+                            issueFound = true;
+                            break;
+                        }
+                    }
+                }
+                // if none of the validations break the instance of switch statement we add another reservation
+                if (reservaciones < 60 && !issueFound) {
+                    ++reservaciones;
+                    arrReservas[reservaciones-1].setFecha(fechaIntroducida);
+                    arrReservas[reservaciones-1].setIdMaterial(inputIDMat);
+                    arrReservas[reservaciones-1].setIdCliente(idCliente);
+                    cout << "El material fue reservado exitosamente! " << endl;
+                }
+                else if(reservaciones >= 60) {
+                    cout << "No hay mas espacio para reservaciones; no se puedo realizar la reservacion " << endl;
+                }
+                else {
+                    cout << "No se pudo realizar la reservacion" << endl;
+                }
                 break;
-            }
-                        
+            }         
             default:{
                 cout << "Ha elegido terminar la sesion " << endl;
+                ofstream archReservaciones;
+                archReservaciones.open("Reservaciones.txt");
+                for (int i = 0; i < reservaciones; i++) {
+                    archReservaciones << arrReservas[i].getFecha().getDd() << " ";
+                    archReservaciones << arrReservas[i].getFecha().getMm() << " ";                    
+                    archReservaciones << arrReservas[i].getFecha().getAa() << " ";
+                    archReservaciones << arrReservas[i].getIdMaterial() << " ";
+                    archReservaciones << arrReservas[i].getIdCliente() << endl;
+                }
+                archReservaciones.close();
+                cout << "El archivo de Reservaciones ha sido actualizado " << endl;
                 break;
             }
         }
