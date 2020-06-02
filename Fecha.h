@@ -224,9 +224,12 @@ ostream &operator<<(ostream &out, Fecha &F) {
     return out;
 }
 istream &operator>>(istream &input,Fecha &F) {
-    cout << "Ingrese la fecha en el formato dd/mm/aa : " << endl;
+    cout << "Ingrese la fecha en el formato dd/mm/aaaa : " << endl;
+    cout << "Dia: ";
     input >> F.dd;
+    cout << "Mes: ";
     input >> F.mm;
+    cout << "Anio: ";
     input >> F.aa;
     return input;
 }

@@ -120,7 +120,7 @@ int main(){
         Fecha fechaInicio, fechaFin, fechaIntroducida;
         string tituloMaterial;
         int inputIDMat, idCliente, indexFoundID, intentos = 0, noOfReservation = 0;
-        bool idValido, fechaValida;
+        bool idValido, fechaValida, newReservation;
         switch (respMenu) {
             case 'A': {
                 for(int i = 0; i < objetosMaterial; i++) {
@@ -213,6 +213,7 @@ int main(){
                 }
                 catch(runtime_error& e) {
                     cout << e.what() << endl;
+                    break;
                 }
                 // revisamos para cada Material si la fecha introducida está dentro del rango de una reservación existente
                 for(int i = 0; i < objetosMaterial; i++) {
@@ -307,6 +308,7 @@ int main(){
                     arrReservas[reservaciones-1].setIdMaterial(inputIDMat);
                     arrReservas[reservaciones-1].setIdCliente(idCliente);
                     cout << "El material fue reservado exitosamente! " << endl;
+                    newReservation = true;
                 }
                 else if(reservaciones >= 60) {
                     cout << "No hay mas espacio para reservaciones; no se puedo realizar la reservacion " << endl;
@@ -318,17 +320,22 @@ int main(){
             }         
             default:{
                 cout << "Ha elegido terminar la sesion " << endl;
-                ofstream archReservaciones;
-                archReservaciones.open("Reservaciones.txt");
-                for (int i = 0; i < reservaciones; i++) {
+                if (newReservation) {
+                    ofstream archReservaciones;
+                    archReservaciones.open("Reservaciones.txt");
+                    for (int i = 0; i < reservaciones; i++) {
                     archReservaciones << arrReservas[i].getFecha().getDd() << " ";
                     archReservaciones << arrReservas[i].getFecha().getMm() << " ";                    
                     archReservaciones << arrReservas[i].getFecha().getAa() << " ";
                     archReservaciones << arrReservas[i].getIdMaterial() << " ";
                     archReservaciones << arrReservas[i].getIdCliente() << endl;
+                    }
+                    archReservaciones.close();
+                    cout << "El archivo de Reservaciones ha sido actualizado " << endl;
                 }
-                archReservaciones.close();
-                cout << "El archivo de Reservaciones ha sido actualizado " << endl;
+                else {
+                    cout << "No hay cambios en el archivo de Reservaciones " << endl;
+                }
                 break;
             }
         }

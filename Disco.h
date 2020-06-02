@@ -51,7 +51,7 @@ string Disco::getGenero() {
 }
 // implementation of inherited abstract methods
 void Disco::muestraDatos() {
-    cout << "Tipo de material: Libro \t" << "ID: " << idMaterial << " \t" << "Titulo: " << titulo << " \t";
+    cout << "Tipo de material: Disco \t" << "ID: " << idMaterial << " \t" << "Titulo: " << titulo << " \t";
     cout << "Duracion: " << duracion << " \t" << "Genero: " << Genero << endl;
 }
 int Disco::cantidadDiasPrestamo() {
