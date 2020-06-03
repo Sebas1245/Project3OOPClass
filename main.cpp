@@ -87,6 +87,7 @@ int main(){
                 throw runtime_error("Error al cargar archivo de Materiales, clave no reconocida");
             }
             i++;
+            // llevar cuenta de cuantos objetosMaterial tengo
             objetosMaterial = i;
         }
     }
